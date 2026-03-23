@@ -1,0 +1,5 @@
+{
+  "name": "BobuCam",
+  "description": "A fun camera app with photo taking, DIY stickers, and dynamic exports.",
+  "requestFramePermissions": ["camera"]
+}
