@@ -9,7 +9,7 @@ export default function Camera() {
   const { addPhoto, reset } = useAppStore();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [photoCount, setPhotoCount] = useState(0);
@@ -19,7 +19,7 @@ export default function Camera() {
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', aspectRatio: 3/4 },
+        video: { facingMode: 'user', aspectRatio: 3 / 4 },
         audio: false,
       });
       setStream(mediaStream);
@@ -46,22 +46,22 @@ export default function Camera() {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      
+
       // Match canvas to video dimensions
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      
+
       const ctx = canvas.getContext('2d');
       if (ctx) {
         // Mirror the image horizontally
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
+
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
         addPhoto(dataUrl);
         setPhotoCount(prev => prev + 1);
-        
+
         // Flash effect
         setFlash(true);
         setTimeout(() => setFlash(false), 100);
@@ -72,7 +72,7 @@ export default function Camera() {
   const startShootingSequence = async () => {
     if (isShooting) return;
     setIsShooting(true);
-    
+
     for (let i = 0; i < 4; i++) {
       // Countdown 3, 2, 1
       for (let c = 3; c > 0; c--) {
@@ -83,7 +83,7 @@ export default function Camera() {
       takePhoto();
       await new Promise(resolve => setTimeout(resolve, 500)); // Pause after photo
     }
-    
+
     // Stop camera and navigate
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
@@ -92,12 +92,14 @@ export default function Camera() {
   };
 
   return (
-    <div className="relative h-screen bg-zinc-900 flex flex-col">
-      {/* Header */}
-      <div className="absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-center">
-        <button 
+    // 1. 修改背景色为 #ef6f2e (原本是 bg-zinc-900)
+    <div className="relative h-screen bg-[#ef6f2e] flex flex-col">
+
+      {/* Header (原样保留) */}
+      <div className="absolute top-0 left-0 right-0 p-4 z-30 flex justify-between items-center">
+        <button
           onClick={() => navigate('/')}
-          className="p-2 bg-black/20 backdrop-blur-md rounded-full text-white"
+          className="p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:scale-105 transition-transform"
         >
           <X className="w-6 h-6" />
         </button>
@@ -115,9 +117,18 @@ export default function Camera() {
           muted
           className="absolute inset-0 w-full h-full object-cover -scale-x-100"
         />
+
+        {/* 绝对不能丢的 canvas，拍照全靠它 */}
         <canvas ref={canvasRef} className="hidden" />
 
-        {/* Flash Overlay */}
+        {/* 👇 新增：手绘镂空相框！层级 z-10，不阻挡其他动画 */}
+        <img
+          src="/src/assets/ui/camera-frame.png"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
+          alt="相机边框"
+        />
+
+        {/* Flash Overlay (原样保留，调整层级 z-20) */}
         <AnimatePresence>
           {flash && (
             <motion.div
@@ -125,12 +136,12 @@ export default function Camera() {
               animate={{ opacity: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              className="absolute inset-0 bg-white z-10"
+              className="absolute inset-0 bg-white z-20"
             />
           )}
         </AnimatePresence>
 
-        {/* Countdown Overlay */}
+        {/* Countdown Overlay (原样保留，调整层级 z-30 确保显示在最上层) */}
         <AnimatePresence>
           {countdown !== null && (
             <motion.div
@@ -138,7 +149,7 @@ export default function Camera() {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.5, opacity: 0 }}
-              className="absolute z-20 text-white text-8xl font-black drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+              className="absolute z-30 text-white text-8xl font-black drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
             >
               {countdown}
             </motion.div>
@@ -146,20 +157,20 @@ export default function Camera() {
         </AnimatePresence>
       </div>
 
-      {/* Controls */}
-      <div className="h-40 bg-black flex items-center justify-center pb-8">
+      {/* Controls (底部控制区) */}
+      <div className="h-40 bg-[#ef6f2e] flex items-center justify-center pb-8">
+        {/* 👇 替换为你要求的手绘快门按钮，保留全部原有触发逻辑 */}
         <button
           onClick={startShootingSequence}
           disabled={isShooting}
-          className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center disabled:opacity-50 transition-transform active:scale-95"
+          className="transition-transform active:scale-95 hover:scale-105 disabled:opacity-50 disabled:active:scale-100"
         >
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-            {isShooting ? (
-              <div className="w-6 h-6 bg-red-500 rounded-sm animate-pulse" />
-            ) : (
-              <CameraIcon className="w-8 h-8 text-black" />
-            )}
-          </div>
+          <img
+            src="/src/assets/ui/shutter-btn.png"
+            alt="拍照"
+            // 建议你的 shutter-btn.png 素材尺寸在 300x300px 左右，这里限制显示大小为 24x24 (96px)
+            className="w-24 h-24 object-contain drop-shadow-xl"
+          />
         </button>
       </div>
     </div>
