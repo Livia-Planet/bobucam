@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store';
 import { motion, AnimatePresence } from 'motion/react';
-import { Camera as CameraIcon, X } from 'lucide-react';
 
 export default function Camera() {
   const navigate = useNavigate();
@@ -28,7 +27,6 @@ export default function Camera() {
       }
     } catch (err) {
       console.error("Error accessing camera:", err);
-      // Fallback or error handling could go here
     }
   };
 
@@ -47,13 +45,11 @@ export default function Camera() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
 
-      // Match canvas to video dimensions
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        // Mirror the image horizontally
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -62,7 +58,6 @@ export default function Camera() {
         addPhoto(dataUrl);
         setPhotoCount(prev => prev + 1);
 
-        // Flash effect
         setFlash(true);
         setTimeout(() => setFlash(false), 100);
       }
@@ -74,17 +69,15 @@ export default function Camera() {
     setIsShooting(true);
 
     for (let i = 0; i < 4; i++) {
-      // Countdown 3, 2, 1
       for (let c = 3; c > 0; c--) {
         setCountdown(c);
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       setCountdown(null);
       takePhoto();
-      await new Promise(resolve => setTimeout(resolve, 500)); // Pause after photo
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    // Stop camera and navigate
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
     }
@@ -92,19 +85,29 @@ export default function Camera() {
   };
 
   return (
-    // 1. 修改背景色为 #ef6f2e (原本是 bg-zinc-900)
     <div className="relative h-screen bg-[#ef6f2e] flex flex-col">
 
-      {/* Header (原样保留) */}
+      {/* Header */}
       <div className="absolute top-0 left-0 right-0 p-4 z-30 flex justify-between items-center">
+        {/* 关闭按钮：移除了背景色和边距，只留图片本身 */}
         <button
           onClick={() => navigate('/')}
-          className="p-2 bg-black/20 backdrop-blur-md rounded-full text-white hover:scale-105 transition-transform"
+          className="hover:scale-110 active:scale-95 transition-transform"
         >
-          <X className="w-6 h-6" />
+          <img
+            src="/src/assets/ui/btn_close.png"
+            className="w-10 h-10 object-contain drop-shadow-md"
+            alt="关闭"
+          />
         </button>
-        <div className="px-4 py-1.5 bg-black/40 backdrop-blur-md rounded-full text-white font-medium text-sm">
-          {photoCount} / 4
+
+        {/* 拍照计数器：根据 photoCount 状态动态加载不同图片 */}
+        <div className="h-8">
+          <img
+            src={`/src/assets/ui/count_${photoCount}.png`}
+            className="h-full object-contain drop-shadow-md"
+            alt={`${photoCount}/4`}
+          />
         </div>
       </div>
 
@@ -118,17 +121,14 @@ export default function Camera() {
           className="absolute inset-0 w-full h-full object-cover -scale-x-100"
         />
 
-        {/* 绝对不能丢的 canvas，拍照全靠它 */}
         <canvas ref={canvasRef} className="hidden" />
 
-        {/* 👇 新增：手绘镂空相框！层级 z-10，不阻挡其他动画 */}
         <img
           src="/src/assets/ui/camera-frame.png"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
           alt="相机边框"
         />
 
-        {/* Flash Overlay (原样保留，调整层级 z-20) */}
         <AnimatePresence>
           {flash && (
             <motion.div
@@ -141,7 +141,7 @@ export default function Camera() {
           )}
         </AnimatePresence>
 
-        {/* Countdown Overlay (原样保留，调整层级 z-30 确保显示在最上层) */}
+        {/* Countdown Overlay */}
         <AnimatePresence>
           {countdown !== null && (
             <motion.div
@@ -149,17 +149,21 @@ export default function Camera() {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.5, opacity: 0 }}
-              className="absolute z-30 text-white text-8xl font-black drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+              className="absolute z-30"
             >
-              {countdown}
+              {/* 倒计时：根据 countdown 状态动态加载不同图片 */}
+              <img
+                src={`/src/assets/ui/cd_${countdown}.png`}
+                className="w-48 h-48 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                alt={`倒数${countdown}`}
+              />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Controls (底部控制区) */}
+      {/* Controls */}
       <div className="h-40 bg-[#ef6f2e] flex items-center justify-center pb-8">
-        {/* 👇 替换为你要求的手绘快门按钮，保留全部原有触发逻辑 */}
         <button
           onClick={startShootingSequence}
           disabled={isShooting}
@@ -168,7 +172,6 @@ export default function Camera() {
           <img
             src="/src/assets/ui/shutter-btn.png"
             alt="拍照"
-            // 建议你的 shutter-btn.png 素材尺寸在 300x300px 左右，这里限制显示大小为 24x24 (96px)
             className="w-24 h-24 object-contain drop-shadow-xl"
           />
         </button>
