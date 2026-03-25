@@ -1,3 +1,26 @@
+# 📸 BobuCam (波波相機)
+
+一款超可愛的手繪風「拍立得」Web App！捕捉瞬間，貼上可愛貼紙，生成屬於你的回憶。
+
+## ✨ 特色功能
+- **手繪感濾鏡**：界面與按鈕充滿溫度的手繪線條感。
+- **動態裝飾**：自由添加、旋轉、縮放、刪除可愛的 Bobu 家族貼紙。
+- **多樣導出**：支持「長條四格」、「田字格」靜態圖，以及超酷的「動態 GIF」導出。
+- **純本地處理**：照片不會上傳伺服器，保護隱私且運行流暢。
+
+## 🚀 技術棧
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: Tailwind CSS (v4)
+- **Animation**: Framer Motion
+- **Library**: `html-to-image`, `gifshot`
+- **Storage**: Zustand + Persist
+
+## 🛠️ 開發說明
+
+### 安裝依賴
+```bash
+npm install
+
 <div align="center">
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
