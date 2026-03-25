@@ -20,7 +20,7 @@ export default function Export() {
       <div className="h-screen flex flex-col items-center justify-center bg-white">
         <img src="/src/assets/ui/text_nophoto.png" alt="No pics taken yet, cutie!" className="w-64 mb-8 object-contain opacity-80" />
         <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
-          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain" alt="take photo" />
+          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain rough-wiggle" alt="take photo" />
         </button>
       </div>
     );
