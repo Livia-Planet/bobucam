@@ -97,7 +97,7 @@ export default function Camera() {
           <img
             src="/src/assets/ui/btn_close.png"
             className="w-10 h-10 object-contain drop-shadow-md"
-            alt="关闭"
+            alt="Close"
           />
         </button>
 
@@ -126,7 +126,7 @@ export default function Camera() {
         <img
           src="/src/assets/ui/camera-frame.png"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
-          alt="相机边框"
+          alt="Camera Frame"
         />
 
         <AnimatePresence>
@@ -155,7 +155,7 @@ export default function Camera() {
               <img
                 src={`/src/assets/ui/cd_${countdown}.png`}
                 className="w-48 h-48 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
-                alt={`倒数${countdown}`}
+                alt={`countdown ${countdown}`}
               />
             </motion.div>
           )}
@@ -171,7 +171,7 @@ export default function Camera() {
         >
           <img
             src="/src/assets/ui/shutter-btn.png"
-            alt="拍照"
+            alt="Take Photo"
             className="w-24 h-24 object-contain drop-shadow-xl"
           />
         </button>

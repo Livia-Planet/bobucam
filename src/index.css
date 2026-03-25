@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+/* 模擬手繪線條不穩定的抖動感 */
+@keyframes rough-wiggle {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    20% {
+        transform: translate(1px, -1px) rotate(0.3deg);
+    }
+
+    40% {
+        transform: translate(-1px, 1px) rotate(-0.5deg);
+    }
+
+    60% {
+        transform: translate(1.5px, 0.5px) rotate(0.2deg);
+    }
+
+    80% {
+        transform: translate(-0.5px, -1.5px) rotate(-0.2deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.rough-wiggle {
+    /* infinite 表示無限循環，0.3s 是速度（越小越快） */
+    animation: rough-wiggle 0.3s infinite;
+    /* 讓動畫看起來更「卡頓」一點，更有定格動畫的感覺 */
+    animation-timing-function: steps(2, end);
+}

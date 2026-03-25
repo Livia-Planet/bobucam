@@ -52,9 +52,9 @@ export default function Editor() {
   if (!currentPhoto) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-white">
-        <p className="mb-4 text-xl font-bold text-zinc-400">还没拍照哦！</p>
+        <p className="mb-4 text-xl font-bold text-zinc-400">No pics taken yet, cutie~</p>
         <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
-          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain" alt="去拍照" />
+          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain" alt="Take Photo" />
         </button>
       </div>
     );
@@ -87,13 +87,13 @@ export default function Editor() {
       <div className="relative h-20 flex items-center justify-between px-4 shrink-0">
         <img src="/src/assets/ui/header_bg.png" className="absolute inset-0 w-full h-full object-fill pointer-events-none" alt="" />
         <button onClick={() => navigate('/camera')} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
-          <img src="/src/assets/ui/btn_retake.png" alt="重拍" className="w-full h-full object-contain" />
+          <img src="/src/assets/ui/btn_retake.png" alt="Retake" className="w-full h-full object-contain" />
         </button>
         <div className="relative z-10 h-10">
-          <img src="/src/assets/ui/title_editor.png" alt="贴纸手账" className="h-full object-contain" />
+          <img src="/src/assets/ui/title_editor.png" alt="Sticker Journal" className="h-full object-contain" />
         </div>
         <button onClick={() => navigate('/export')} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
-          <img src="/src/assets/ui/btn_next.png" alt="下一步" className="w-full h-full object-contain" />
+          <img src="/src/assets/ui/btn_next.png" alt="Next" className="w-full h-full object-contain" />
         </button>
       </div>
 
@@ -118,10 +118,10 @@ export default function Editor() {
           </>
         )}
 
-        <div className="relative w-full max-w-[300px] aspect-[3/4] drop-shadow-2xl">
+        <div className="relative w-full max-w-75 aspect-3/4 drop-shadow-2xl">
           {/* 层级 0：照片本体 */}
           <div className="absolute inset-[4%] z-0 overflow-hidden bg-zinc-100 rounded-sm">
-            <img src={currentPhoto.dataUrl} className="w-full h-full object-cover pointer-events-none" alt="照片" />
+            <img src={currentPhoto.dataUrl} className="w-full h-full object-cover pointer-events-none" alt="photo" />
           </div>
 
           {/* 层级 10：专属相框 */}
@@ -129,7 +129,7 @@ export default function Editor() {
             <img
               src={currentPhoto.frameSrc}
               className="absolute inset-0 w-full h-full object-fill pointer-events-none z-10"
-              alt="相框"
+              alt="frame"
             />
           )}
 
@@ -169,18 +169,62 @@ export default function Editor() {
                 }}
                 className={`absolute cursor-pointer ${activeStickerId === sticker.id ? 'ring-2 ring-dashed ring-orange-400/50' : ''}`}
               >
-                <img src={sticker.src} className="w-full h-full object-contain pointer-events-none drop-shadow-md" />
+                <img src={sticker.src}
+                // 🌟 加在這裡，這樣貼紙線條就會自己抖動，但不會影響你拖拽它
+                 className="w-full h-full object-contain pointer-events-none drop-shadow-md rough-wiggle" />
                 <AnimatePresence>
                   {activeStickerId === sticker.id && (
                     <div className="absolute -inset-4 pointer-events-none">
-                      <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute -top-2 -left-2 w-8 h-8 pointer-events-auto" onClick={(e) => { e.stopPropagation(); removeSticker(currentPhoto.id, sticker.id); }}>
-                        <img src="/src/assets/ui/btn_del.png" alt="删除" className="w-full h-full" />
+                      {/* 1. 左上角：刪除 */}
+                      <motion.button
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className="absolute -top-2 -left-2 w-8 h-8 pointer-events-auto rough-wiggle"
+                        onClick={(e) => { e.stopPropagation(); removeSticker(currentPhoto.id, sticker.id); }}
+                      >
+                        <img src="/src/assets/ui/btn_del.png" alt="Delete" className="w-full h-full" />
                       </motion.button>
-                      <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute -top-2 -right-2 w-8 h-8 pointer-events-auto" onClick={(e) => { e.stopPropagation(); updateSticker(currentPhoto.id, sticker.id, { rotation: sticker.rotation + 15 }); }}>
-                        <img src="/src/assets/ui/btn_rotate.png" alt="旋转" className="w-full h-full" />
+
+                      {/* 2. 右上角：旋轉 */}
+                      <motion.button
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className="absolute -top-2 -right-2 w-8 h-8 pointer-events-auto rough-wiggle"
+                        style={{ animationDelay: '0.1s' }} // 💡 小技巧：讓每個按鈕抖動時間錯開，更自然
+                        onClick={(e) => { e.stopPropagation(); updateSticker(currentPhoto.id, sticker.id, { rotation: sticker.rotation + 15 }); }}
+                      >
+                        <img src="/src/assets/ui/btn_rotate.png" alt="Rotate" className="w-full h-full" />
                       </motion.button>
-                      <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="absolute -bottom-2 -right-2 w-8 h-8 pointer-events-auto" onClick={(e) => { e.stopPropagation(); updateSticker(currentPhoto.id, sticker.id, { width: sticker.width + 5, height: sticker.height + 5 }); }}>
-                        <img src="/src/assets/ui/btn_scale.png" alt="缩放" className="w-full h-full" />
+
+                      {/* 3. 右下角：放大 */}
+                      <motion.button
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className="absolute -bottom-2 -right-2 w-8 h-8 pointer-events-auto rough-wiggle"
+                        style={{ animationDelay: '0.2s' }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateSticker(currentPhoto.id, sticker.id, {
+                            width: sticker.width + 5,
+                            height: sticker.height + 5
+                          });
+                        }}
+                      >
+                        <img src="/src/assets/ui/btn_scale.png" alt="Scale Up" className="w-full h-full" />
+                      </motion.button>
+
+                      {/* 🌟 4. 新增左下角：縮小 */}
+                      <motion.button
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        className="absolute -bottom-2 -left-2 w-8 h-8 pointer-events-auto rough-wiggle"
+                        style={{ animationDelay: '0.3s' }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Math.max(10, ...) 確保寬高最少維持在 5%，不會消失
+                          updateSticker(currentPhoto.id, sticker.id, {
+                            width: Math.max(5, sticker.width - 5),
+                            height: Math.max(5, sticker.height - 5)
+                          });
+                        }}
+                      >
+                        <img src="/src/assets/ui/btn_shrink.png" alt="Shrink" className="w-full h-full" />
                       </motion.button>
                     </div>
                   )}
@@ -220,7 +264,7 @@ export default function Editor() {
               className="relative shrink-0 w-20 h-20 p-2 active:scale-90 transition-transform"
             >
               <img src="/src/assets/ui/sticker_item_bg.png" className="absolute inset-0 w-full h-full object-contain -z-10 opacity-80" alt="" />
-              <img src={item.src} className="w-full h-full object-contain pointer-events-none" alt="素材" />
+              <img src={item.src} className="w-full h-full object-contain pointer-events-none" alt="sticker" />
             </button>
           ))}
         </div>

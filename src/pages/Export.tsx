@@ -18,9 +18,9 @@ export default function Export() {
   if (photos.length === 0) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-white">
-        <img src="/src/assets/ui/text_nophoto.png" alt="还没拍照哦" className="w-64 mb-8 object-contain opacity-80" />
+        <img src="/src/assets/ui/text_nophoto.png" alt="No pics taken yet, cutie!" className="w-64 mb-8 object-contain opacity-80" />
         <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
-          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain" alt="去拍照" />
+          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain" alt="take photo" />
         </button>
       </div>
     );
@@ -113,7 +113,7 @@ export default function Export() {
       if (navigator.share) {
         await navigator.share({ title: 'My BobuCam Moments', files: [file] });
       } else {
-        alert("請保存到相冊後分享哦！");
+        alert("Save & share, pretty please!");
       }
     } catch (error) {
       console.error("Share failed", error);
@@ -125,11 +125,11 @@ export default function Export() {
       {/* 頂部導航 */}
       <div className="relative h-20 flex items-center justify-between px-4 shrink-0 bg-white shadow-sm z-10">
         <button onClick={() => navigate('/editor')} className="w-12 h-12 active:scale-90 transition-transform">
-          <img src="/src/assets/ui/btn_back.png" alt="返回" className="w-full h-full object-contain" />
+          <img src="/src/assets/ui/btn_back.png" alt="Back" className="w-full h-full object-contain" />
         </button>
-        <img src="/src/assets/ui/title_export.png" alt="导出" className="h-10 object-contain" />
+        <img src="/src/assets/ui/title_export.png" alt="Export" className="h-10 object-contain" />
         <button onClick={() => navigate('/')} className="w-12 h-12 active:scale-90 transition-transform">
-          <img src="/src/assets/ui/btn_home.png" alt="首页" className="w-full h-full object-contain" />
+          <img src="/src/assets/ui/btn_home.png" alt="Home" className="w-full h-full object-contain" />
         </button>
       </div>
 
@@ -158,20 +158,20 @@ export default function Export() {
           {previewUrl && !isExporting ? (
             <img src={previewUrl} className="w-full h-auto rounded-sm shadow-inner" />
           ) : (
-            <div className="w-full aspect-[3/4] flex items-center justify-center bg-zinc-50 text-zinc-300">渲染中...</div>
+            <div className="w-full aspect-3/4 flex items-center justify-center bg-zinc-50 text-zinc-300">Rendering...</div>
           )}
 
           {/* 渲染隱藏層 */}
-          <div className="absolute -left-[9999px] top-0 pointer-events-none">
+          <div className="absolute -left-2499.75 top-0 pointer-events-none">
             <div
               ref={stripRef}
-              className={`relative p-8 pb-24 ${exportType === 'grid' ? 'grid grid-cols-2 gap-4 w-[800px]' : 'flex flex-col gap-6 w-[400px]'}`}
+              className={`relative p-8 pb-24 ${exportType === 'grid' ? 'grid grid-cols-2 gap-4 w-200' : 'flex flex-col gap-6 w-100'}`}
               style={{ backgroundColor: '#ffffff' }} // ✨ 1. 底板改成純白色
             >
               {photos.map((photo) => (
                 <div
                   key={photo.id}
-                  className="gif-frame-target relative w-full aspect-[3/4] overflow-hidden bg-white"
+                  className="gif-frame-target relative w-full aspect-3/4 overflow-hidden bg-white"
                 >
                   {/* ✨ 2. 照片本體：GIF 模式下內縮增加到 15%，非 GIF 保持你原本完美的 4% */}
                   <div className={`absolute z-0 overflow-hidden rounded-sm transition-all ${exportType === 'gif' ? 'inset-[15%]' : 'inset-[4%]'
@@ -215,10 +215,10 @@ export default function Export() {
       {/* 底部按鈕 */}
       <div className="bg-white p-6 pb-8 border-t border-zinc-100 flex gap-4 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
         <button onClick={handleDownload} disabled={isExporting || !previewUrl} className="flex-1 h-16 active:scale-95 transition-transform">
-          <img src="/src/assets/ui/btn_save.png" alt="保存" className="w-full h-full object-contain" />
+          <img src="/src/assets/ui/btn_save.png" alt="Save" className="w-full h-full object-contain" />
         </button>
         <button onClick={handleShare} disabled={isExporting || !previewUrl} className="flex-1 h-16 active:scale-95 transition-transform">
-          <img src="/src/assets/ui/btn_share.png" alt="分享" className="w-full h-full object-contain" />
+          <img src="/src/assets/ui/btn_share.png" alt="Share" className="w-full h-full object-contain" />
         </button>
       </div>
     </div>
