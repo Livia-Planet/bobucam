@@ -4,9 +4,8 @@ import { useAppStore } from '../store';
 import { Sticker } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 
-// 1. 扩展列表，加入 type 以区分贴纸和相框
+// 完全保留你的素材列表和分类
 const ITEM_LIST = [
-  // 生命周期贴纸
   { id: 's1', src: '/src/assets/stickers/Bobu.png', category: 'life', type: 'sticker' },
   { id: 's2', src: '/src/assets/stickers/Duddu.png', category: 'life', type: 'sticker' },
   { id: 's3', src: '/src/assets/stickers/Issi.png', category: 'life', type: 'sticker' },
@@ -15,7 +14,6 @@ const ITEM_LIST = [
   { id: 's6', src: '/src/assets/stickers/Pollyplutten.png', category: 'life', type: 'sticker' },
   { id: 's7', src: '/src/assets/stickers/Doddi.png', category: 'life', type: 'sticker' },
   { id: 's8', src: '/src/assets/stickers/Nakis.png', category: 'life', type: 'sticker' },
-  // 宇宙贴纸
   { id: 's9', src: '/src/assets/stickers/Sol.png', category: 'universe', type: 'sticker' },
   { id: 's10', src: '/src/assets/stickers/Merkurius.png', category: 'universe', type: 'sticker' },
   { id: 's11', src: '/src/assets/stickers/Venus.png', category: 'universe', type: 'sticker' },
@@ -28,10 +26,7 @@ const ITEM_LIST = [
   { id: 's18', src: '/src/assets/stickers/Neptune.png', category: 'universe', type: 'sticker' },
   { id: 's19', src: '/src/assets/stickers/Svarthal.png', category: 'universe', type: 'sticker' },
   { id: 's20', src: '/src/assets/stickers/Maskhal.png', category: 'universe', type: 'sticker' },
-  // 把相框放在 element 分类里
   { id: 'f1', src: '/src/assets/ui/photo_frame.png', category: 'element', type: 'frame' },
-  // 如果你有更多的相框素材，可以继续加在这里，例如：
-  // { id: 'f2', src: '/src/assets/ui/frame_vintage.png', category: 'element', type: 'frame' },
 ];
 
 const CATEGORIES = [
@@ -49,6 +44,9 @@ export default function Editor() {
   const [activeCategory, setActiveCategory] = useState('life');
 
   const containerRef = useRef<HTMLDivElement>(null);
+  // 🌟 终极武器：用来记录每次拖拽开始时的精确坐标，彻底解决偏移问题
+  const panStartMap = useRef<Record<string, { x: number; y: number }>>({});
+
   const currentPhoto = photos[currentIndex];
 
   if (!currentPhoto) {
@@ -62,13 +60,10 @@ export default function Editor() {
     );
   }
 
-  // 点击素材库物品
   const handleItemClick = (item: any) => {
     if (item.type === 'frame') {
-      // 如果是相框，替换当前照片的相框
       updatePhotoFrame(currentPhoto.id, item.src);
     } else {
-      // 如果是贴纸，添加到画布中心
       const newSticker: Sticker = {
         id: `sticker-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
         src: item.src,
@@ -81,23 +76,6 @@ export default function Editor() {
       addSticker(currentPhoto.id, newSticker);
       setActiveStickerId(newSticker.id);
     }
-  };
-
-  // 🌟 修复贴纸弹开问题：采用相对位移计算
-  const handleDragEnd = (stickerId: string, info: any) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const sticker = currentPhoto.stickers.find(s => s.id === stickerId);
-    if (!sticker) return;
-
-    // 计算相对于原位置的百分比变化量
-    const deltaXPercent = (info.offset.x / rect.width) * 100;
-    const deltaYPercent = (info.offset.y / rect.height) * 100;
-
-    updateSticker(currentPhoto.id, stickerId, {
-      x: sticker.x + deltaXPercent,
-      y: sticker.y + deltaYPercent,
-    });
   };
 
   const filteredItems = ITEM_LIST.filter(item => item.category === activeCategory);
@@ -140,15 +118,13 @@ export default function Editor() {
           </>
         )}
 
-        {/* 核心舞台：统一 3:4 比例 */}
         <div className="relative w-full max-w-[300px] aspect-[3/4] drop-shadow-2xl">
-
           {/* 层级 0：照片本体 */}
           <div className="absolute inset-[4%] z-0 overflow-hidden bg-zinc-100 rounded-sm">
             <img src={currentPhoto.dataUrl} className="w-full h-full object-cover pointer-events-none" alt="照片" />
           </div>
 
-          {/* 层级 10：专属相框 (从当前照片数据中读取) */}
+          {/* 层级 10：专属相框 */}
           {currentPhoto.frameSrc && (
             <img
               src={currentPhoto.frameSrc}
@@ -158,15 +134,28 @@ export default function Editor() {
           )}
 
           {/* 层级 20：贴纸交互层 */}
-          <div ref={containerRef} className="absolute inset-0 z-20">
+          <div ref={containerRef} className="absolute inset-0 z-20 overflow-hidden">
             {currentPhoto.stickers.map((sticker) => (
               <motion.div
                 key={sticker.id}
-                drag
-                dragMomentum={false}
-                dragConstraints={containerRef}
-                onDragStart={() => setActiveStickerId(sticker.id)}
-                onDragEnd={(_, info) => handleDragEnd(sticker.id, info)}
+                // 🌟 改用 onPan 替代 drag，彻底消灭位移冲突
+                onPanStart={() => {
+                  panStartMap.current[sticker.id] = { x: sticker.x, y: sticker.y };
+                  setActiveStickerId(sticker.id);
+                }}
+                onPan={(e, info) => {
+                  if (!containerRef.current || !panStartMap.current[sticker.id]) return;
+                  const rect = containerRef.current.getBoundingClientRect();
+                  const startPos = panStartMap.current[sticker.id];
+
+                  const dxPercent = (info.offset.x / rect.width) * 100;
+                  const dyPercent = (info.offset.y / rect.height) * 100;
+
+                  updateSticker(currentPhoto.id, sticker.id, {
+                    x: Math.min(Math.max(startPos.x + dxPercent, 0), 100),
+                    y: Math.min(Math.max(startPos.y + dyPercent, 0), 100),
+                  });
+                }}
                 onClick={(e) => { e.stopPropagation(); setActiveStickerId(sticker.id); }}
                 style={{
                   left: `${sticker.x}%`,
@@ -174,11 +163,11 @@ export default function Editor() {
                   width: `${sticker.width}%`,
                   height: `${sticker.height}%`,
                   rotate: sticker.rotation,
+                  x: "-50%",
+                  y: "-50%",
                   touchAction: 'none'
                 }}
-                // 确保拖拽和初始居中的逻辑不冲突
-                animate={{ x: "-50%", y: "-50%" }}
-                className={`absolute cursor-move ${activeStickerId === sticker.id ? 'ring-2 ring-dashed ring-orange-400/50' : ''}`}
+                className={`absolute cursor-pointer ${activeStickerId === sticker.id ? 'ring-2 ring-dashed ring-orange-400/50' : ''}`}
               >
                 <img src={sticker.src} className="w-full h-full object-contain pointer-events-none drop-shadow-md" />
                 <AnimatePresence>
