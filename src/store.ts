@@ -21,7 +21,7 @@ export const useAppStore = create<AppState>((set) => ({
           id: Date.now().toString() + Math.random(),
           dataUrl,
           stickers: [],
-          frameSrc: '/src/assets/ui/photo_frame.png' // 赋予默认相框
+          frameSrc: '/ui/photo_frame.png' // 赋予默认相框
         },
       ],
     })),

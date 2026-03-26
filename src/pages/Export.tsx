@@ -181,7 +181,14 @@ export default function Export() {
 
                   {/* ✨ 3. 相框：無論什麼模式都始終維持 inset-0，確保相框大小不動 */}
                   {photo.frameSrc && (
-                    <img src={photo.frameSrc} className="absolute inset-0 w-full h-full object-fill z-10" />
+                    <img
+                      src={photo.frameSrc || '/ui/photo_frame.png'}
+                      className="absolute inset-0 w-full h-full object-fill z-10"
+                      onError={(e) => {
+                        // 雙重保險：如果圖片加載失敗，切換成一張透明點陣圖，防止崩潰
+                        e.currentTarget.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+                      }}
+                    />
                   )}
 
                   {/* 貼紙 */}
