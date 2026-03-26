@@ -15,11 +15,30 @@ export default function Export() {
   const [isDirty, setIsDirty] = useState(true);
   const stripRef = useRef<HTMLDivElement>(null);
 
+  // 🌟 1. 宣告音效 Ref
+  const clickAudio = useRef(new Audio('/audio/click.wav'));
+
+  // 🌟 2. 預加載音效
+  useEffect(() => {
+    clickAudio.current.load();
+  }, []);
+
+  // 🌟 3. 定義播放函數
+  const playClickSound = () => {
+    if (clickAudio.current) {
+      clickAudio.current.currentTime = 0;
+      clickAudio.current.play().catch(e => console.log("Audio play failed"));
+    }
+  };
+
   if (photos.length === 0) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-white">
         <img src="/ui/text_nophoto.png" alt="No pics taken yet, cutie!" className="w-64 mb-8 object-contain opacity-80" />
-        <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
+        <button
+          onClick={() => { playClickSound(); navigate('/'); }}
+          className="active:scale-95 transition-transform"
+        >
           <img src="/ui/btn_start.png" className="w-48 object-contain rough-wiggle" alt="take photo" />
         </button>
       </div>
@@ -99,6 +118,7 @@ export default function Export() {
 
   const handleDownload = () => {
     if (!previewUrl) return;
+    playClickSound(); // 🌟 5. 下載按鈕加音效
     const a = document.createElement('a');
     a.href = previewUrl;
     a.download = `bobucam-${exportType}-${Date.now()}.${exportType === 'gif' ? 'gif' : 'png'}`;
@@ -107,6 +127,7 @@ export default function Export() {
 
   const handleShare = async () => {
     if (!previewUrl) return;
+    playClickSound(); // 🌟 6. 分享按鈕加音效
     try {
       const blob = await (await fetch(previewUrl)).blob();
       const file = new File([blob], `bobucam.${exportType === 'gif' ? 'gif' : 'png'}`, { type: blob.type });
@@ -124,11 +145,12 @@ export default function Export() {
     <div className="h-screen bg-white flex flex-col select-none">
       {/* 頂部導航 */}
       <div className="relative h-20 flex items-center justify-between px-4 shrink-0 bg-white shadow-sm z-10">
-        <button onClick={() => navigate('/editor')} className="w-12 h-12 active:scale-90 transition-transform">
+        {/* 🌟 7. 返回按鈕 */}
+        <button onClick={() => { playClickSound(); navigate('/editor'); }} className="w-12 h-12 active:scale-90 transition-transform">
           <img src="/ui/btn_back.png" alt="Back" className="w-full h-full object-contain" />
         </button>
         <img src="/ui/title_export.png" alt="Export" className="h-10 object-contain" />
-        <button onClick={() => navigate('/')} className="w-12 h-12 active:scale-90 transition-transform">
+        <button onClick={() => { playClickSound(); navigate('/'); }} className="w-12 h-12 active:scale-90 transition-transform">
           <img src="/ui/btn_home.png" alt="Home" className="w-full h-full object-contain" />
         </button>
       </div>
@@ -139,7 +161,7 @@ export default function Export() {
           {(['strip', 'grid', 'gif'] as const).map((type) => (
             <button
               key={type}
-              onClick={() => setExportType(type)}
+              onClick={() => { playClickSound(); setExportType(type); }} // 🌟 9. 切換 Tab 時播放音效
               className={`w-24 h-10 transition-all ${exportType === type ? 'scale-105 drop-shadow-md' : 'opacity-40 grayscale'}`}
             >
               <img src={`/ui/tab_${type}.png`} className="w-full h-full object-contain" />

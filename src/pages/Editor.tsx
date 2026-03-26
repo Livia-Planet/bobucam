@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store';
 import { Sticker } from '../types';
@@ -47,13 +47,38 @@ export default function Editor() {
   // 🌟 终极武器：用来记录每次拖拽开始时的精确坐标，彻底解决偏移问题
   const panStartMap = useRef<Record<string, { x: number; y: number }>>({});
 
+  // 🌟 1. 音效初始化 (放在 Hooks 頂層)
+  const clickAudio = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    // 初始化音效
+    const audio = new Audio('/audio/click.wav');
+    audio.load();
+    clickAudio.current = audio;
+
+    // 🌟 可選：清理函數（當用戶離開這個頁面時，釋放音效資源）
+    return () => {
+      if (clickAudio.current) {
+        clickAudio.current.pause();
+        clickAudio.current = null;
+      }
+    };
+  }, []);
+
+  const playClickSound = () => {
+    if (clickAudio.current) {
+      clickAudio.current.currentTime = 0;
+      clickAudio.current.play().catch(e => console.log("Audio failed", e));
+    }
+  };
+
   const currentPhoto = photos[currentIndex];
 
+  // 🌟 2. 確保 return 前所有的 Hooks 都已經宣告完畢
   if (!currentPhoto) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-white">
         <p className="mb-4 text-xl font-bold text-zinc-400">No pics taken yet, cutie~</p>
-        <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
+        <button onClick={() => { playClickSound(); navigate('/'); }} className="active:scale-95 transition-transform">
           <img src="/ui/btn_start.png" className="w-48 object-contain" alt="Take Photo" />
         </button>
       </div>
@@ -61,6 +86,7 @@ export default function Editor() {
   }
 
   const handleItemClick = (item: any) => {
+    playClickSound(); // 🌟 3. 點擊素材列表時播放
     if (item.type === 'frame') {
       updatePhotoFrame(currentPhoto.id, item.src);
     } else {
@@ -81,18 +107,19 @@ export default function Editor() {
   const filteredItems = ITEM_LIST.filter(item => item.category === activeCategory);
 
   return (
-    <div className="flex flex-col h-screen bg-white overflow-hidden select-none" onClick={() => setActiveStickerId(null)}>
-
+    <div className="flex flex-col h-screen bg-white overflow-hidden select-none"
+      onClick={() => { if (activeStickerId) playClickSound(); setActiveStickerId(null); }} // 🌟 點空白處取消也響一下
+    >
       {/* 顶部导航栏 */}
       <div className="relative h-20 flex items-center justify-between px-4 shrink-0">
         <img src="/ui/header_bg.png" className="absolute inset-0 w-full h-full object-fill pointer-events-none" alt="" />
-        <button onClick={() => navigate('/camera')} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
+        <button onClick={() => { playClickSound(); navigate('/camera'); }} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
           <img src="/ui/btn_retake.png" alt="Retake" className="w-full h-full object-contain" />
         </button>
         <div className="relative z-10 h-10">
           <img src="/ui/title_editor.png" alt="Sticker Journal" className="h-full object-contain" />
         </div>
-        <button onClick={() => navigate('/export')} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
+        <button onClick={() => { playClickSound(); navigate('/export'); }} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
           <img src="/ui/btn_next.png" alt="Next" className="w-full h-full object-contain" />
         </button>
       </div>
@@ -103,14 +130,14 @@ export default function Editor() {
           <>
             <button
               disabled={currentIndex === 0}
-              onClick={(e) => { e.stopPropagation(); setCurrentIndex(currentIndex - 1); }}
+              onClick={(e) => { e.stopPropagation(); playClickSound(); setCurrentIndex(currentIndex - 1); }} // 🌟 切換照片
               className={`absolute left-2 z-30 w-10 h-10 transition-all ${currentIndex === 0 ? 'opacity-0' : 'active:scale-90'}`}
             >
               <img src="/ui/arrow_left.png" alt="左" className="w-full h-full" />
             </button>
             <button
               disabled={currentIndex === photos.length - 1}
-              onClick={(e) => { e.stopPropagation(); setCurrentIndex(currentIndex + 1); }}
+              onClick={(e) => { e.stopPropagation(); playClickSound(); setCurrentIndex(currentIndex + 1); }} // 🌟 切換照片
               className={`absolute right-2 z-30 w-10 h-10 transition-all ${currentIndex === photos.length - 1 ? 'opacity-0' : 'active:scale-90'}`}
             >
               <img src="/ui/arrow_right.png" alt="右" className="w-full h-full" />
@@ -141,6 +168,7 @@ export default function Editor() {
                 // 🌟 改用 onPan 替代 drag，彻底消灭位移冲突
                 onPanStart={() => {
                   panStartMap.current[sticker.id] = { x: sticker.x, y: sticker.y };
+                  if (activeStickerId !== sticker.id) playClickSound(); // 🌟 選中貼紙時響一下
                   setActiveStickerId(sticker.id);
                 }}
                 onPan={(e, info) => {
@@ -170,8 +198,8 @@ export default function Editor() {
                 className={`absolute cursor-pointer ${activeStickerId === sticker.id ? 'ring-2 ring-dashed ring-orange-400/50' : ''}`}
               >
                 <img src={sticker.src}
-                // 🌟 加在這裡，這樣貼紙線條就會自己抖動，但不會影響你拖拽它
-                 className="w-full h-full object-contain pointer-events-none drop-shadow-md rough-wiggle" />
+                  // 🌟 加在這裡，這樣貼紙線條就會自己抖動，但不會影響你拖拽它
+                  className="w-full h-full object-contain pointer-events-none drop-shadow-md" />
                 <AnimatePresence>
                   {activeStickerId === sticker.id && (
                     <div className="absolute -inset-4 pointer-events-none">
@@ -244,7 +272,7 @@ export default function Editor() {
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
-              onClick={(e) => { e.stopPropagation(); setActiveCategory(cat.id); }}
+              onClick={(e) => { e.stopPropagation(); playClickSound(); setActiveCategory(cat.id); }} // 🌟 分類切換
               className="relative w-16 h-8 active:scale-95 transition-transform flex flex-col items-center"
             >
               <img src={cat.src} className={`w-full h-full object-contain transition-opacity ${activeCategory === cat.id ? 'opacity-100' : 'opacity-40'}`} alt={cat.id} />

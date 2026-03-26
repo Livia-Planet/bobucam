@@ -1,10 +1,36 @@
-import { Link } from 'react-router-dom';
+import { useRef, useEffect, MouseEvent } from 'react'; // 🌟 1. 引入 Hooks
+import { Link, useNavigate } from 'react-router-dom'; // 🌟 2. 引入 useNavigate
 import { motion } from 'motion/react';
 
 // 🌟 核心技巧：將 Link 包裝成可以做動畫的組件
 const MotionLink = motion.create(Link);
 
 export default function Home() {
+  const navigate = useNavigate(); // 🌟 3. 初始化導航功能
+
+  // 🌟 4. 音效初始化邏輯
+  const clickAudio = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    clickAudio.current = new Audio('/audio/click.wav');
+    clickAudio.current.load();
+  }, []);
+
+  const playClickAndNavigate = (e: MouseEvent) => {
+    // 阻止 Link 的默認直接跳轉，改由我們手動控制
+    e.preventDefault();
+
+    if (clickAudio.current) {
+      clickAudio.current.currentTime = 0;
+      clickAudio.current.play().catch(err => console.log("Audio play failed:", err));
+    }
+
+    // 稍微延遲 100ms 跳轉，讓聲音能發出來，且視覺上更有點擊感
+    setTimeout(() => {
+      navigate('/camera');
+    }, 100);
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center h-screen p-6 overflow-hidden">
       {/* 1. 全局背景圖 */}
@@ -51,8 +77,10 @@ export default function Home() {
         </div>
 
         {/* 🌟 4. 修改後的開始拍攝按鈕 */}
+        {/* 🌟 5. 綁定新的點擊處理函數 */}
         <MotionLink
           to="/camera"
+          onClick={playClickAndNavigate} // 改用這個函數處理點擊
           className="relative inline-flex items-center justify-center w-64"
           // 滑鼠懸停與點擊效果
           whileHover={{ scale: 1.05 }}
