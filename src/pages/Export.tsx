@@ -195,36 +195,39 @@ export default function Export() {
                   key={photo.id}
                   className="gif-frame-target relative w-full aspect-3/4 overflow-hidden bg-white"
                 >
-                  {/* ✨ 2. 照片本體：GIF 模式下內縮增加到 15%，非 GIF 保持你原本完美的 4% */}
-                  <div className={`absolute z-0 overflow-hidden rounded-sm transition-all ${exportType === 'gif' ? 'inset-[15%]' : 'inset-[4%]'
-                    }`}>
-                    <img src={photo.dataUrl} className="w-full h-full object-cover" />
+                  {/* 🌟 終極絕招：內容包裹層 (Content Wrapper) */}
+                  {/* 當是 GIF 時，我們往內縮約 11% (視覺上照片會達到約 15% 的內縮)，而非 GIF 時保持滿版 */}
+                  <div className={`absolute transition-all ${exportType === 'gif' ? 'inset-[11%]' : 'inset-0'}`}>
+
+                    {/* 1. 照片本體：永遠保持和 Editor 一模一樣的 inset-[4%] */}
+                    <div className="absolute z-0 overflow-hidden rounded-sm inset-[4%]">
+                      <img src={photo.dataUrl} className="w-full h-full object-cover" />
+                    </div>
+
+                    {/* 2. 相框：永遠跟隨包裹層保持 inset-0 */}
+                    {photo.frameSrc && (
+                      <img
+                        src={photo.frameSrc || '/ui/photo_frame.png'}
+                        className="absolute inset-0 w-full h-full object-fill z-10 pointer-events-none"
+                        onError={(e) => {
+                          e.currentTarget.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+                        }}
+                      />
+                    )}
+
+                    {/* 3. 貼紙：永遠跟隨包裹層保持 inset-0 */}
+                    <div className="absolute inset-0 z-20 pointer-events-none">
+                      {photo.stickers.map(sticker => (
+                        <div key={sticker.id} className="absolute" style={{ left: `${sticker.x}%`, top: `${sticker.y}%`, width: `${sticker.width}%`, height: `${sticker.height}%`, transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg)` }}>
+                          <img src={sticker.src} className="w-full h-full object-contain drop-shadow-md" />
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  {/* ✨ 3. 相框：無論什麼模式都始終維持 inset-0，確保相框大小不動 */}
-                  {photo.frameSrc && (
-                    <img
-                      src={photo.frameSrc || '/ui/photo_frame.png'}
-                      className="absolute inset-0 w-full h-full object-fill z-10"
-                      onError={(e) => {
-                        // 雙重保險：如果圖片加載失敗，切換成一張透明點陣圖，防止崩潰
-                        e.currentTarget.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-                      }}
-                    />
-                  )}
-
-                  {/* 貼紙 */}
-                  <div className="absolute inset-0 z-20">
-                    {photo.stickers.map(sticker => (
-                      <div key={sticker.id} className="absolute" style={{ left: `${sticker.x}%`, top: `${sticker.y}%`, width: `${sticker.width}%`, height: `${sticker.height}%`, transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg)` }}>
-                        <img src={sticker.src} className="w-full h-full object-contain drop-shadow-md" />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* 水印 */}
+                  {/* 4. 水印：放在包裹層【外面】，這樣它就會永遠釘在 GIF 畫布的右下角，不會跟著照片縮小！ */}
                   {exportType === 'gif' && (
-                    <div className="absolute bottom-4 right-4 opacity-70 z-30">
+                    <div className="absolute bottom-4 right-4 opacity-70 z-30 pointer-events-none">
                       <img src="/ui/watermark.png" className="h-8 object-contain" />
                     </div>
                   )}
@@ -232,7 +235,7 @@ export default function Export() {
               ))}
 
               {exportType !== 'gif' && (
-                <div className="absolute bottom-6 right-8 opacity-70">
+                <div className="absolute bottom-6 right-8 opacity-70 pointer-events-none">
                   <img src="/ui/watermark.png" className="h-10 object-contain" />
                 </div>
               )}
