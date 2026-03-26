@@ -6,34 +6,34 @@ import { motion, AnimatePresence } from 'motion/react';
 
 // 完全保留你的素材列表和分类
 const ITEM_LIST = [
-  { id: 's1', src: '/src/assets/stickers/Bobu.png', category: 'life', type: 'sticker' },
-  { id: 's2', src: '/src/assets/stickers/Duddu.png', category: 'life', type: 'sticker' },
-  { id: 's3', src: '/src/assets/stickers/Issi.png', category: 'life', type: 'sticker' },
-  { id: 's4', src: '/src/assets/stickers/Ri.png', category: 'life', type: 'sticker' },
-  { id: 's5', src: '/src/assets/stickers/Pluttenplott.png', category: 'life', type: 'sticker' },
-  { id: 's6', src: '/src/assets/stickers/Pollyplutten.png', category: 'life', type: 'sticker' },
-  { id: 's7', src: '/src/assets/stickers/Doddi.png', category: 'life', type: 'sticker' },
-  { id: 's8', src: '/src/assets/stickers/Nakis.png', category: 'life', type: 'sticker' },
-  { id: 's9', src: '/src/assets/stickers/Sol.png', category: 'universe', type: 'sticker' },
-  { id: 's10', src: '/src/assets/stickers/Merkurius.png', category: 'universe', type: 'sticker' },
-  { id: 's11', src: '/src/assets/stickers/Venus.png', category: 'universe', type: 'sticker' },
-  { id: 's12', src: '/src/assets/stickers/Jorden.png', category: 'universe', type: 'sticker' },
-  { id: 's13', src: '/src/assets/stickers/Moon.png', category: 'universe', type: 'sticker' },
-  { id: 's14', src: '/src/assets/stickers/Mars.png', category: 'universe', type: 'sticker' },
-  { id: 's15', src: '/src/assets/stickers/Jupiter.png', category: 'universe', type: 'sticker' },
-  { id: 's16', src: '/src/assets/stickers/Saturnus.png', category: 'universe', type: 'sticker' },
-  { id: 's17', src: '/src/assets/stickers/Uranus.png', category: 'universe', type: 'sticker' },
-  { id: 's18', src: '/src/assets/stickers/Neptunus.png', category: 'universe', type: 'sticker' },
-  { id: 's19', src: '/src/assets/stickers/Svarthal.png', category: 'universe', type: 'sticker' },
-  { id: 's20', src: '/src/assets/stickers/Maskhal.png', category: 'universe', type: 'sticker' },
-  { id: 'f1', src: '/src/assets/ui/photo_frame.png', category: 'element', type: 'frame' },
+  { id: 's1', src: '/public/stickers/Bobu.png', category: 'life', type: 'sticker' },
+  { id: 's2', src: '/public/stickers/Duddu.png', category: 'life', type: 'sticker' },
+  { id: 's3', src: '/public/stickers/Issi.png', category: 'life', type: 'sticker' },
+  { id: 's4', src: '/public/stickers/Ri.png', category: 'life', type: 'sticker' },
+  { id: 's5', src: '/public/stickers/Pluttenplott.png', category: 'life', type: 'sticker' },
+  { id: 's6', src: '/public/stickers/Pollyplutten.png', category: 'life', type: 'sticker' },
+  { id: 's7', src: '/public/stickers/Doddi.png', category: 'life', type: 'sticker' },
+  { id: 's8', src: '/public/stickers/Nakis.png', category: 'life', type: 'sticker' },
+  { id: 's9', src: '/public/stickers/Sol.png', category: 'universe', type: 'sticker' },
+  { id: 's10', src: '/public/stickers/Merkurius.png', category: 'universe', type: 'sticker' },
+  { id: 's11', src: '/public/stickers/Venus.png', category: 'universe', type: 'sticker' },
+  { id: 's12', src: '/public/stickers/Jorden.png', category: 'universe', type: 'sticker' },
+  { id: 's13', src: '/public/stickers/Moon.png', category: 'universe', type: 'sticker' },
+  { id: 's14', src: '/public/stickers/Mars.png', category: 'universe', type: 'sticker' },
+  { id: 's15', src: '/public/stickers/Jupiter.png', category: 'universe', type: 'sticker' },
+  { id: 's16', src: '/public/stickers/Saturnus.png', category: 'universe', type: 'sticker' },
+  { id: 's17', src: '/public/stickers/Uranus.png', category: 'universe', type: 'sticker' },
+  { id: 's18', src: '/public/stickers/Neptunus.png', category: 'universe', type: 'sticker' },
+  { id: 's19', src: '/public/stickers/Svarthal.png', category: 'universe', type: 'sticker' },
+  { id: 's20', src: '/public/stickers/Maskhal.png', category: 'universe', type: 'sticker' },
+  { id: 'f1', src: '/public/ui/photo_frame.png', category: 'element', type: 'frame' },
 ];
 
 const CATEGORIES = [
-  { id: 'universe', src: '/src/assets/ui/tab_universe.png' },
-  { id: 'nature', src: '/src/assets/ui/tab_nature.png' },
-  { id: 'life', src: '/src/assets/ui/tab_life.png' },
-  { id: 'element', src: '/src/assets/ui/tab_element.png' },
+  { id: 'universe', src: '/public/ui/tab_universe.png' },
+  { id: 'nature', src: '/public/ui/tab_nature.png' },
+  { id: 'life', src: '/public/ui/tab_life.png' },
+  { id: 'element', src: '/public/ui/tab_element.png' },
 ];
 
 export default function Editor() {
@@ -54,7 +54,7 @@ export default function Editor() {
       <div className="h-screen flex flex-col items-center justify-center bg-white">
         <p className="mb-4 text-xl font-bold text-zinc-400">No pics taken yet, cutie~</p>
         <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
-          <img src="/src/assets/ui/btn_start.png" className="w-48 object-contain" alt="Take Photo" />
+          <img src="/public/ui/btn_start.png" className="w-48 object-contain" alt="Take Photo" />
         </button>
       </div>
     );
@@ -85,15 +85,15 @@ export default function Editor() {
 
       {/* 顶部导航栏 */}
       <div className="relative h-20 flex items-center justify-between px-4 shrink-0">
-        <img src="/src/assets/ui/header_bg.png" className="absolute inset-0 w-full h-full object-fill pointer-events-none" alt="" />
+        <img src="/public/ui/header_bg.png" className="absolute inset-0 w-full h-full object-fill pointer-events-none" alt="" />
         <button onClick={() => navigate('/camera')} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
-          <img src="/src/assets/ui/btn_retake.png" alt="Retake" className="w-full h-full object-contain" />
+          <img src="/public/ui/btn_retake.png" alt="Retake" className="w-full h-full object-contain" />
         </button>
         <div className="relative z-10 h-10">
-          <img src="/src/assets/ui/title_editor.png" alt="Sticker Journal" className="h-full object-contain" />
+          <img src="/public/ui/title_editor.png" alt="Sticker Journal" className="h-full object-contain" />
         </div>
         <button onClick={() => navigate('/export')} className="relative z-10 w-12 h-12 active:scale-90 transition-transform">
-          <img src="/src/assets/ui/btn_next.png" alt="Next" className="w-full h-full object-contain" />
+          <img src="/public/ui/btn_next.png" alt="Next" className="w-full h-full object-contain" />
         </button>
       </div>
 
@@ -106,14 +106,14 @@ export default function Editor() {
               onClick={(e) => { e.stopPropagation(); setCurrentIndex(currentIndex - 1); }}
               className={`absolute left-2 z-30 w-10 h-10 transition-all ${currentIndex === 0 ? 'opacity-0' : 'active:scale-90'}`}
             >
-              <img src="/src/assets/ui/arrow_left.png" alt="左" className="w-full h-full" />
+              <img src="/public/ui/arrow_left.png" alt="左" className="w-full h-full" />
             </button>
             <button
               disabled={currentIndex === photos.length - 1}
               onClick={(e) => { e.stopPropagation(); setCurrentIndex(currentIndex + 1); }}
               className={`absolute right-2 z-30 w-10 h-10 transition-all ${currentIndex === photos.length - 1 ? 'opacity-0' : 'active:scale-90'}`}
             >
-              <img src="/src/assets/ui/arrow_right.png" alt="右" className="w-full h-full" />
+              <img src="/public/ui/arrow_right.png" alt="右" className="w-full h-full" />
             </button>
           </>
         )}
@@ -181,7 +181,7 @@ export default function Editor() {
                         className="absolute -top-2 -left-2 w-8 h-8 pointer-events-auto rough-wiggle"
                         onClick={(e) => { e.stopPropagation(); removeSticker(currentPhoto.id, sticker.id); }}
                       >
-                        <img src="/src/assets/ui/btn_del.png" alt="Delete" className="w-full h-full" />
+                        <img src="/public/ui/btn_del.png" alt="Delete" className="w-full h-full" />
                       </motion.button>
 
                       {/* 2. 右上角：旋轉 */}
@@ -191,7 +191,7 @@ export default function Editor() {
                         style={{ animationDelay: '0.1s' }} // 💡 小技巧：讓每個按鈕抖動時間錯開，更自然
                         onClick={(e) => { e.stopPropagation(); updateSticker(currentPhoto.id, sticker.id, { rotation: sticker.rotation + 15 }); }}
                       >
-                        <img src="/src/assets/ui/btn_rotate.png" alt="Rotate" className="w-full h-full" />
+                        <img src="/public/ui/btn_rotate.png" alt="Rotate" className="w-full h-full" />
                       </motion.button>
 
                       {/* 3. 右下角：放大 */}
@@ -207,7 +207,7 @@ export default function Editor() {
                           });
                         }}
                       >
-                        <img src="/src/assets/ui/btn_scale.png" alt="Scale Up" className="w-full h-full" />
+                        <img src="/public/ui/btn_scale.png" alt="Scale Up" className="w-full h-full" />
                       </motion.button>
 
                       {/* 🌟 4. 新增左下角：縮小 */}
@@ -224,7 +224,7 @@ export default function Editor() {
                           });
                         }}
                       >
-                        <img src="/src/assets/ui/btn_shrink.png" alt="Shrink" className="w-full h-full" />
+                        <img src="/public/ui/btn_shrink.png" alt="Shrink" className="w-full h-full" />
                       </motion.button>
                     </div>
                   )}
@@ -237,7 +237,7 @@ export default function Editor() {
 
       {/* 底部操作区 */}
       <div className="relative shrink-0 flex flex-col pb-4 pt-2">
-        <img src="/src/assets/ui/tray_bg.png" className="absolute inset-0 w-full h-full object-fill pointer-events-none" alt="" />
+        <img src="/public/ui/tray_bg.png" className="absolute inset-0 w-full h-full object-fill pointer-events-none" alt="" />
 
         {/* 分类 Tab */}
         <div className="relative z-10 flex justify-around px-4 mb-2">
@@ -249,7 +249,7 @@ export default function Editor() {
             >
               <img src={cat.src} className={`w-full h-full object-contain transition-opacity ${activeCategory === cat.id ? 'opacity-100' : 'opacity-40'}`} alt={cat.id} />
               {activeCategory === cat.id && (
-                <img src="/src/assets/ui/tab_indicator.png" className="absolute -bottom-2 w-8 h-2 object-contain" alt="" />
+                <img src="/public/ui/tab_indicator.png" className="absolute -bottom-2 w-8 h-2 object-contain" alt="" />
               )}
             </button>
           ))}
@@ -263,7 +263,7 @@ export default function Editor() {
               onClick={(e) => { e.stopPropagation(); handleItemClick(item); }}
               className="relative shrink-0 w-20 h-20 p-2 active:scale-90 transition-transform"
             >
-              <img src="/src/assets/ui/sticker_item_bg.png" className="absolute inset-0 w-full h-full object-contain -z-10 opacity-80" alt="" />
+              <img src="/public/ui/sticker_item_bg.png" className="absolute inset-0 w-full h-full object-contain -z-10 opacity-80" alt="" />
               <img src={item.src} className="w-full h-full object-contain pointer-events-none" alt="sticker" />
             </button>
           ))}
