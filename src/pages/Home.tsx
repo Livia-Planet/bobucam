@@ -10,7 +10,7 @@ export default function Home() {
       {/* 1. 全局背景圖 */}
       <div className="absolute inset-0 -z-10">
         <img
-          src="/public/ui/home_bg.jpg"
+          src="/ui/home_bg.jpg"
           className="w-full h-full object-cover"
           alt=""
           onError={(e) => (e.currentTarget.style.display = 'none')}
@@ -27,7 +27,7 @@ export default function Home() {
         {/* 2. Logo */}
         <div className="w-48 h-48 mb-6 rotate-2 transition-transform hover:rotate-0">
           <img
-            src="/public/ui/home_logo.png"
+            src="/ui/home_logo.png"
             className="w-full h-full object-contain drop-shadow-md"
             alt="BobuCam Logo"
           />
@@ -36,7 +36,7 @@ export default function Home() {
         {/* 3. 標題文字 */}
         <div className="h-20 mb-4">
           <img
-            src="/public/ui/home_title.png"
+            src="/ui/home_title.png"
             className="h-full object-contain"
             alt="BobuCam"
           />
@@ -44,7 +44,7 @@ export default function Home() {
 
         <div className="h-8 mb-20">
           <img
-            src="/public/ui/home_subtitle.png"
+            src="/ui/home_subtitle.png"
             className="h-full object-contain opacity-80"
             alt="Snap, decorate, and share!"
           />
@@ -70,7 +70,7 @@ export default function Home() {
           }}
         >
           <img
-            src="/public/ui/btn_start.png"
+            src="/ui/btn_start.png"
             className="w-full object-contain drop-shadow-lg"
             alt="Start Shooting"
           />
@@ -79,7 +79,7 @@ export default function Home() {
 
       <div className="absolute bottom-6 h-6 opacity-40">
         <img
-          src="/public/ui/home_decorator.png"
+          src="/ui/home_decorator.png"
           className="h-full object-contain"
           alt="Handmade Decorator"
         />

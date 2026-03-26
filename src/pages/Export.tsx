@@ -18,9 +18,9 @@ export default function Export() {
   if (photos.length === 0) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-white">
-        <img src="/public/ui/text_nophoto.png" alt="No pics taken yet, cutie!" className="w-64 mb-8 object-contain opacity-80" />
+        <img src="/ui/text_nophoto.png" alt="No pics taken yet, cutie!" className="w-64 mb-8 object-contain opacity-80" />
         <button onClick={() => navigate('/')} className="active:scale-95 transition-transform">
-          <img src="/public/ui/btn_start.png" className="w-48 object-contain rough-wiggle" alt="take photo" />
+          <img src="/ui/btn_start.png" className="w-48 object-contain rough-wiggle" alt="take photo" />
         </button>
       </div>
     );
@@ -125,11 +125,11 @@ export default function Export() {
       {/* 頂部導航 */}
       <div className="relative h-20 flex items-center justify-between px-4 shrink-0 bg-white shadow-sm z-10">
         <button onClick={() => navigate('/editor')} className="w-12 h-12 active:scale-90 transition-transform">
-          <img src="/public/ui/btn_back.png" alt="Back" className="w-full h-full object-contain" />
+          <img src="/ui/btn_back.png" alt="Back" className="w-full h-full object-contain" />
         </button>
-        <img src="/public/ui/title_export.png" alt="Export" className="h-10 object-contain" />
+        <img src="/ui/title_export.png" alt="Export" className="h-10 object-contain" />
         <button onClick={() => navigate('/')} className="w-12 h-12 active:scale-90 transition-transform">
-          <img src="/public/ui/btn_home.png" alt="Home" className="w-full h-full object-contain" />
+          <img src="/ui/btn_home.png" alt="Home" className="w-full h-full object-contain" />
         </button>
       </div>
 
@@ -142,7 +142,7 @@ export default function Export() {
               onClick={() => setExportType(type)}
               className={`w-24 h-10 transition-all ${exportType === type ? 'scale-105 drop-shadow-md' : 'opacity-40 grayscale'}`}
             >
-              <img src={`/public/ui/tab_${type}.png`} className="w-full h-full object-contain" />
+              <img src={`/ui/tab_${type}.png`} className="w-full h-full object-contain" />
             </button>
           ))}
         </div>
@@ -151,8 +151,8 @@ export default function Export() {
         <div className="w-full max-w-[320px] relative bg-white p-3 pb-10 rounded-sm shadow-xl border border-zinc-200">
           {isExporting && (
             <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
-              <img src="/public/ui/icon_loading.png" className="w-16 h-16 animate-bounce" />
-              <img src="/public/ui/text_loading.png" className="h-8 animate-pulse" />
+              <img src="/ui/icon_loading.png" className="w-16 h-16 animate-bounce" />
+              <img src="/ui/text_loading.png" className="h-8 animate-pulse" />
             </div>
           )}
           {previewUrl && !isExporting ? (
@@ -196,7 +196,7 @@ export default function Export() {
                   {/* 水印 */}
                   {exportType === 'gif' && (
                     <div className="absolute bottom-4 right-4 opacity-70 z-30">
-                      <img src="/public/ui/watermark.png" className="h-8 object-contain" />
+                      <img src="/ui/watermark.png" className="h-8 object-contain" />
                     </div>
                   )}
                 </div>
@@ -204,7 +204,7 @@ export default function Export() {
 
               {exportType !== 'gif' && (
                 <div className="absolute bottom-6 right-8 opacity-70">
-                  <img src="/public/ui/watermark.png" className="h-10 object-contain" />
+                  <img src="/ui/watermark.png" className="h-10 object-contain" />
                 </div>
               )}
             </div>
@@ -215,10 +215,10 @@ export default function Export() {
       {/* 底部按鈕 */}
       <div className="bg-white p-6 pb-8 border-t border-zinc-100 flex gap-4 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
         <button onClick={handleDownload} disabled={isExporting || !previewUrl} className="flex-1 h-16 active:scale-95 transition-transform">
-          <img src="/public/ui/btn_save.png" alt="Save" className="w-full h-full object-contain" />
+          <img src="/ui/btn_save.png" alt="Save" className="w-full h-full object-contain" />
         </button>
         <button onClick={handleShare} disabled={isExporting || !previewUrl} className="flex-1 h-16 active:scale-95 transition-transform">
-          <img src="/public/ui/btn_share.png" alt="Share" className="w-full h-full object-contain" />
+          <img src="/ui/btn_share.png" alt="Share" className="w-full h-full object-contain" />
         </button>
       </div>
     </div>

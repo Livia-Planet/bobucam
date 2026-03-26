@@ -95,7 +95,7 @@ export default function Camera() {
           className="hover:scale-110 active:scale-95 transition-transform"
         >
           <img
-            src="/public/ui/btn_close.png"
+            src="/ui/btn_close.png"
             className="w-10 h-10 object-contain drop-shadow-md"
             alt="Close"
           />
@@ -104,7 +104,7 @@ export default function Camera() {
         {/* 拍照计数器：根据 photoCount 状态动态加载不同图片 */}
         <div className="h-8">
           <img
-            src={`/public/ui/count_${photoCount}.png`}
+            src={`/ui/count_${photoCount}.png`}
             className="h-full object-contain drop-shadow-md"
             alt={`${photoCount}/4`}
           />
@@ -124,7 +124,7 @@ export default function Camera() {
         <canvas ref={canvasRef} className="hidden" />
 
         <img
-          src="/public/ui/camera-frame.png"
+          src="/ui/camera-frame.png"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none z-10"
           alt="Camera Frame"
         />
@@ -153,7 +153,7 @@ export default function Camera() {
             >
               {/* 倒计时：根据 countdown 状态动态加载不同图片 */}
               <img
-                src={`/public/ui/cd_${countdown}.png`}
+                src={`/ui/cd_${countdown}.png`}
                 className="w-48 h-48 object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
                 alt={`countdown ${countdown}`}
               />
@@ -170,7 +170,7 @@ export default function Camera() {
           className="transition-transform active:scale-95 hover:scale-105 disabled:opacity-50 disabled:active:scale-100"
         >
           <img
-            src="/public/ui/shutter-btn.png"
+            src="/ui/shutter-btn.png"
             alt="Take Photo"
             className="w-24 h-24 object-contain drop-shadow-xl"
           />
