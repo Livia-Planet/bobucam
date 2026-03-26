@@ -43,7 +43,7 @@ export default function Export() {
       } finally {
         setIsExporting(false);
       }
-    }, 500);
+    }, 1000);
   };
 
   const generateDynamic = async () => {
@@ -81,7 +81,7 @@ export default function Export() {
         console.error('Failed to prepare frames for GIF', err);
         setIsExporting(false);
       }
-    }, 600);
+    }, 1200);
   };
 
   useEffect(() => {
